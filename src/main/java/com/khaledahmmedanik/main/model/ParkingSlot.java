@@ -20,7 +20,7 @@ public class ParkingSlot {
 	
 	private boolean isBooked;
 	
-	private Time bookedTime;
+	private Time bookedAt;
 	
 	private CarInfo bookedCarInfo;
 
