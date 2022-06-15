@@ -21,5 +21,7 @@ public class ParkingSlot {
 	private boolean isBooked;
 	
 	private Time bookedTime;
+	
+	private CarInfo bookedCarInfo;
 
 }
