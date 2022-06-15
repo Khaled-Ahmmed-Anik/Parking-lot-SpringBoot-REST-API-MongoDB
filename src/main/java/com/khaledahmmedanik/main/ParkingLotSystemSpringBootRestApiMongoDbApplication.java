@@ -1,5 +1,7 @@
 package com.khaledahmmedanik.main;
 
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +10,13 @@ public class ParkingLotSystemSpringBootRestApiMongoDbApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ParkingLotSystemSpringBootRestApiMongoDbApplication.class, args);
+		
+		
+		/*Checked time working or not/ will remove later
+		 * java.sql.Time date = new
+		 * java.sql.Time(Calendar.getInstance().getTime().getTime());
+		 * System.out.println(date);
+		 */
 	}
 
 }
