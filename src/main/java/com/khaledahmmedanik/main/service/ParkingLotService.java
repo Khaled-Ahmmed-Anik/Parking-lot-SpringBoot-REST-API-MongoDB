@@ -11,7 +11,7 @@ import com.khaledahmmedanik.main.model.ParkingSlot;
 
 public interface ParkingLotService {
 	
-	public ResponseEntity<?> addParkingSlot(ParkingSlot newParkingSlot) throws ConstraintViolationException, ParkingSlotCollectionExceptioin;
+	public ParkingSlot addParkingSlot() throws ConstraintViolationException, ParkingSlotCollectionExceptioin;
 	
 	
 	public List<ParkingSlot> getAllParkingSlots();

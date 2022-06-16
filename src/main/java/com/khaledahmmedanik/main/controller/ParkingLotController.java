@@ -1,11 +1,7 @@
 package com.khaledahmmedanik.main.controller;
 
-import java.sql.Time;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
-import javax.annotation.PostConstruct;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +15,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.format.DateTimeFormatter;  
-import java.time.LocalDateTime;
 
 import com.khaledahmmedanik.main.exception.ParkingSlotCollectionExceptioin;
 import com.khaledahmmedanik.main.model.ParkingSlot;
-import com.khaledahmmedanik.main.repository.ParkingLotRepository;
 import com.khaledahmmedanik.main.service.ParkingLotService;
 
 @RestController
 public class ParkingLotController {
-
-	
-		@Autowired
-		private ParkingLotRepository parkingLotRepo;
 		
 		@Autowired ParkingLotService parkingLotService;
 		
@@ -49,13 +38,13 @@ public class ParkingLotController {
 		
 		
 		
-		// to add new parking slot or space to the database (extra space add to the parking lot)
+		// to add new parking slot or space to the database (extra space add to the parking lot, )
 		
-		@PostMapping("/parkingSlots")
-		public ResponseEntity<?> addNewParkingSlot(@RequestBody ParkingSlot newParkingSlot) throws ParkingSlotCollectionExceptioin{
+		@PostMapping("/parkingSlots/add")
+		public ResponseEntity<?> addNewParkingSlot() throws ParkingSlotCollectionExceptioin{
 			
 			try {
-				parkingLotService.addParkingSlot(newParkingSlot);
+				ParkingSlot newParkingSlot= parkingLotService.addParkingSlot();
 				return new ResponseEntity<ParkingSlot>(newParkingSlot,HttpStatus.OK);
 			} catch (ConstraintViolationException e) {
 				return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
