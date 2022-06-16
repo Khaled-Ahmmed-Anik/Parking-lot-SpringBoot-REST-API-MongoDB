@@ -20,7 +20,7 @@ public class ParkingSlot {
 	
 	private boolean isBooked;
 	
-	private Time bookedAt;
+	private String bookedAt;
 	
 	private CarInfo bookedCarInfo;
 

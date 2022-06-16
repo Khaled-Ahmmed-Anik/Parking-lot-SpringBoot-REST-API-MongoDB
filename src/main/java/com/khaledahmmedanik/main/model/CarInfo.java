@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 @Document
 public class CarInfo {
 	
-	@Id
-	private int id;
+	/*
+	 * @Id private int id;
+	 */
 	
 	private String carModel;
 	

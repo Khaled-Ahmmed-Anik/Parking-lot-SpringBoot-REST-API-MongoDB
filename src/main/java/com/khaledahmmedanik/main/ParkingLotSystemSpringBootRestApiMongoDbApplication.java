@@ -2,6 +2,9 @@ package com.khaledahmmedanik.main;
 
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,10 +15,15 @@ public class ParkingLotSystemSpringBootRestApiMongoDbApplication {
 		SpringApplication.run(ParkingLotSystemSpringBootRestApiMongoDbApplication.class, args);
 		
 		
-		/*Checked time working or not/ will remove later
-		 * java.sql.Time date = new
-		 * java.sql.Time(Calendar.getInstance().getTime().getTime());
-		 * System.out.println(date);
+		/*
+		 * DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss\nyyyy/MM/dd ");
+		 * LocalDateTime now = LocalDateTime.now();
+		 * 
+		 * String currentTime = dtf.format(now);
+		 * 
+		 * System.out.println(currentTime);
+		 * 
+		 * 
 		 */
 	}
 
