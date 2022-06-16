@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -128,6 +129,31 @@ public class ParkingLotController {
 			}else {
 				return new ResponseEntity<>("There is no parking slot with id: "+id,HttpStatus.NOT_FOUND);
 			}
+		}
+		
+		
+		
+		
+		
+		
+		@DeleteMapping("/parkingSlots/delete/{id}")
+		public ResponseEntity<?> deleteParkingSlotById(@PathVariable("id") int id){
+			
+			try {
+				
+				Optional<ParkingSlot> foundParkingSlot=parkingLotRepo.findById(id);
+				
+				if(!foundParkingSlot.isPresent()) {
+					return new ResponseEntity<>("Parking slot "+id+" is not exits", HttpStatus.NOT_FOUND);
+				}
+				
+				
+				parkingLotRepo.deleteById(id);
+				return new ResponseEntity<>("Parking slot "+id+" removed successfully", HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			
 		}
 				
 		
