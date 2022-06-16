@@ -33,7 +33,7 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		ParkingSlot newParkingSlot = new ParkingSlot();
 
 		newParkingSlot.setId(id);
-		newParkingSlot.setIsbooked(false);
+		newParkingSlot.setBooked(false);
 		newParkingSlot.setBookedAt(null);
 		newParkingSlot.setBookedCarInfo(null);
 		parkingLotRepo.save(newParkingSlot);
@@ -45,7 +45,8 @@ public class parkingLotServiceImpl implements ParkingLotService {
 	@Override
 	public List<ParkingSlot> getAllParkingSlots() {
 		List<ParkingSlot> parkingSlots = parkingLotRepo.findAll();
-
+		
+		
 		if (parkingSlots.size() > 0) {
 			return parkingSlots;
 		} else {
@@ -75,12 +76,12 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		if (foundParkingSlot.isPresent()) {
 			ParkingSlot toBeUpdate = foundParkingSlot.get();
 
-			if (toBeUpdate.isIsbooked() == false) {
+			if (toBeUpdate.isBooked() == false) {
 				// update car info that booked the slot
 				toBeUpdate.setBookedCarInfo(parkingSlotUpdatedInfo.getBookedCarInfo());
 
 				// update slot booted status (isBooked=true)
-				toBeUpdate.setIsbooked(true);
+				toBeUpdate.setBooked(true);
 
 				// find current time and date
 				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
@@ -112,6 +113,20 @@ public class parkingLotServiceImpl implements ParkingLotService {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.NotFoundException(id));
 		}
 		parkingLotRepo.deleteById(id);
+	}
+	
+	
+	public int getSlotIdReadyToBeBooked() throws ParkingSlotCollectionExceptioin {
+		List<ParkingSlot> searchParkingSlot =  parkingLotRepo.getFreeSlotList(false);
+		
+		System.out.println(searchParkingSlot);
+		
+		if(searchParkingSlot.size()>0) {
+			return searchParkingSlot.get(0).getId();
+		}else {
+			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.AllSlotBooked());
+		}
+		
 	}
 
 }

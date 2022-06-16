@@ -25,8 +25,8 @@ public class ParkingSlot {
 	@Id
 	private int id;
 	
-	@NotNull(message="isBooked can not be null")
-	private boolean isbooked;
+	
+	private boolean booked;
 	
 	private String bookedAt;
 	

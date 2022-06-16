@@ -34,5 +34,11 @@ public class ParkingSlotCollectionExceptioin extends Exception {
 		}
 		
 		
+		public static String AllSlotBooked() {
+			
+			return "All slot are already booked";
+		}
+		
+		
 		
 }
