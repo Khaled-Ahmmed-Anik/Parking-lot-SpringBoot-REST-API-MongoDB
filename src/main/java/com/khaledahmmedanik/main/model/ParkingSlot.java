@@ -30,6 +30,8 @@ public class ParkingSlot {
 	
 	private String bookedAt;
 	
+	private String bookFreeFrom;
+	
 	private CarInfo bookedCarInfo;
 
 	

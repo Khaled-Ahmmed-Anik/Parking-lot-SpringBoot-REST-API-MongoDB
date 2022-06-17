@@ -7,6 +7,7 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 
 import com.khaledahmmedanik.main.exception.ParkingSlotCollectionExceptioin;
+import com.khaledahmmedanik.main.model.CarInfo;
 import com.khaledahmmedanik.main.model.ParkingSlot;
 
 public interface ParkingLotService {
@@ -18,9 +19,12 @@ public interface ParkingLotService {
 	
 	public ParkingSlot getParkingSlotById(int id) throws ParkingSlotCollectionExceptioin;
 	
-	public void bookParkingSlotById(int id, ParkingSlot parkingSlotUpdatedInfo) throws ParkingSlotCollectionExceptioin;
+	public void bookParkingSlotById(int id,CarInfo carInfo) throws ParkingSlotCollectionExceptioin;
 	
 	public void deleteParkingSlotById(int id) throws ParkingSlotCollectionExceptioin;
+
+
+	public ParkingSlot carLeavesSlotInfoUpdate(CarInfo carInfo) throws ParkingSlotCollectionExceptioin;
 	
 
 }

@@ -24,6 +24,10 @@ public class ParkingSlotCollectionExceptioin extends Exception {
 			return "Id can not be null/0";
 		}
 		
+		public static String carVinNull() {
+			return "Car vin can not be null";
+		}
+		
 		public static String newParkingSlotIsBookedtrue() {
 			return "IsBooked can not be True when add a new Parking Slot";
 		}
@@ -37,6 +41,10 @@ public class ParkingSlotCollectionExceptioin extends Exception {
 		public static String AllSlotBooked() {
 			
 			return "All slot are already booked";
+		}
+
+		public static String carNotFound(){
+			return "This car is not in this parking lot or Given car info is not correct";
 		}
 		
 		

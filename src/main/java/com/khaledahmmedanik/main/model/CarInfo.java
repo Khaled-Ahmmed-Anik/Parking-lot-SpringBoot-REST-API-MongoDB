@@ -17,6 +17,8 @@ public class CarInfo {
 	 * @Id private int id;
 	 */
 	
+	private String vin;
+	
 	private String carModel;
 	
 	private String carBrand;

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.khaledahmmedanik.main.exception.ParkingSlotCollectionExceptioin;
+import com.khaledahmmedanik.main.model.CarInfo;
 import com.khaledahmmedanik.main.model.ParkingSlot;
 import com.khaledahmmedanik.main.service.ParkingLotService;
 
@@ -76,10 +77,10 @@ public class ParkingLotController {
 		// book a parking slot   by ID: (update parking slot info)
 		
 		@PutMapping("/parkingSlots/book/{id}")
-		public ResponseEntity<?> bookParkingSlotById(@PathVariable("id") int id, @RequestBody ParkingSlot parkingSlotUpdatedInfo){
+		public ResponseEntity<?> bookParkingSlotById(@PathVariable("id") int id, @RequestBody CarInfo carInfo){
 			
 			try {
-				parkingLotService.bookParkingSlotById(id,parkingSlotUpdatedInfo);
+				parkingLotService.bookParkingSlotById(id,carInfo);
 				return new ResponseEntity<>("Parking slot "+id+" get booked successfully",HttpStatus.OK);
 			}catch (ParkingSlotCollectionExceptioin e) {
 				return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
@@ -105,6 +106,19 @@ public class ParkingLotController {
 			
 		}
 				
+		
+		@PutMapping("/parkingSlots/leave")
+		public ResponseEntity<?> parkingSlotWithCarInfoGetFree(@RequestBody CarInfo carInfo){
+			
+			try {
+				ParkingSlot updatedSlot= parkingLotService.carLeavesSlotInfoUpdate(carInfo);
+				return new ResponseEntity<>("Car "+carInfo.getVin()+" was in slot"+updatedSlot.getId()+" from: "+updatedSlot.getBookedAt()+" to: "+updatedSlot.getBookFreeFrom(),HttpStatus.OK);
+			}catch (ParkingSlotCollectionExceptioin e) {
+				return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
+			}catch (Exception e) {
+				return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+			}
+		}
 		
 		
 		

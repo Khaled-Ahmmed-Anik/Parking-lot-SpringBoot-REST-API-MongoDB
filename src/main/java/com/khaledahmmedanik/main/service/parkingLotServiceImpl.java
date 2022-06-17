@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.khaledahmmedanik.main.exception.ParkingSlotCollectionExceptioin;
+import com.khaledahmmedanik.main.model.CarInfo;
 import com.khaledahmmedanik.main.model.ParkingSlot;
 import com.khaledahmmedanik.main.repository.ParkingLotRepository;
 
@@ -29,7 +30,7 @@ public class parkingLotServiceImpl implements ParkingLotService {
 	public ParkingSlot addParkingSlot() throws ConstraintViolationException, ParkingSlotCollectionExceptioin {
 
 		int id = parkingLotRepo.countTotalParkingSlots() + 1;
-		
+
 		ParkingSlot newParkingSlot = new ParkingSlot();
 
 		newParkingSlot.setId(id);
@@ -45,8 +46,7 @@ public class parkingLotServiceImpl implements ParkingLotService {
 	@Override
 	public List<ParkingSlot> getAllParkingSlots() {
 		List<ParkingSlot> parkingSlots = parkingLotRepo.findAll();
-		
-		
+
 		if (parkingSlots.size() > 0) {
 			return parkingSlots;
 		} else {
@@ -69,7 +69,7 @@ public class parkingLotServiceImpl implements ParkingLotService {
 
 	// booking
 	@Override
-	public void bookParkingSlotById(int id, ParkingSlot parkingSlotUpdatedInfo) throws ParkingSlotCollectionExceptioin {
+	public void bookParkingSlotById(int id, CarInfo carInfo) throws ParkingSlotCollectionExceptioin {
 
 		Optional<ParkingSlot> foundParkingSlot = parkingLotRepo.findById(id);
 
@@ -77,8 +77,14 @@ public class parkingLotServiceImpl implements ParkingLotService {
 			ParkingSlot toBeUpdate = foundParkingSlot.get();
 
 			if (toBeUpdate.isBooked() == false) {
+
+				// check vin given or not
+				if (carInfo.getVin() == null) {
+					throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.carVinNull());
+				}
+
 				// update car info that booked the slot
-				toBeUpdate.setBookedCarInfo(parkingSlotUpdatedInfo.getBookedCarInfo());
+				toBeUpdate.setBookedCarInfo(carInfo);
 
 				// update slot booted status (isBooked=true)
 				toBeUpdate.setBooked(true);
@@ -114,19 +120,56 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		}
 		parkingLotRepo.deleteById(id);
 	}
-	
-	
+
 	public int getSlotIdReadyToBeBooked() throws ParkingSlotCollectionExceptioin {
-		List<ParkingSlot> searchParkingSlot =  parkingLotRepo.getFreeSlotList(false);
-		
+		List<ParkingSlot> searchParkingSlot = parkingLotRepo.getFreeSlotList(false);
+
 		System.out.println(searchParkingSlot);
-		
-		if(searchParkingSlot.size()>0) {
+
+		if (searchParkingSlot.size() > 0) {
 			return searchParkingSlot.get(0).getId();
-		}else {
+		} else {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.AllSlotBooked());
 		}
-		
+
 	}
+	
+	public String getCurretTimeDate() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+		LocalDateTime now = LocalDateTime.now();
+
+		return dtf.format(now);
+	}
+	
+	
+
+	// car leave from parking lot, 1 parking slot get free
+	@Override
+	public ParkingSlot carLeavesSlotInfoUpdate(CarInfo carInfo) throws ParkingSlotCollectionExceptioin {
+
+		Optional<?> foundParkingSlot = parkingLotRepo.getTheSlotId(carInfo.getVin());
+		if (foundParkingSlot.isPresent()) {
+			ParkingSlot toBeUpdated=(ParkingSlot) foundParkingSlot.get();
+			
+			//update leving time
+			toBeUpdated.setBookFreeFrom(getCurretTimeDate());
+			
+			//set Booked as False as car is leaving and slot get free
+			toBeUpdated.setBooked(false);
+			
+			//car info -> null , car is not associate anymore with this particular slot
+			toBeUpdated.setBookedCarInfo(null);
+			
+			parkingLotRepo.save(toBeUpdated);
+			
+			System.out.println(toBeUpdated);
+			return toBeUpdated;
+			
+		} else {
+			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.carNotFound());
+		}
+	}
+	
+	
 
 }
