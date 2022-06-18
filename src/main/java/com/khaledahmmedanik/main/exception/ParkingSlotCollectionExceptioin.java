@@ -47,6 +47,17 @@ public class ParkingSlotCollectionExceptioin extends Exception {
 			return "This car is not in this parking lot or Given car info is not correct";
 		}
 		
+		public static String carAlreadyInLot(String vin, int id){
+			return "Car"+vin+" is already in parking slot "+id ;
+		}
+		
+		public static String NoSlotToDelete(){
+			return "ParkingLot has no slot yet to delete" ;
+		}
+		
+		public static String SlotCanNotBeBooked(){
+			return "Last Parking slot has to be free befor closed" ;
+		}
 		
 		
 }

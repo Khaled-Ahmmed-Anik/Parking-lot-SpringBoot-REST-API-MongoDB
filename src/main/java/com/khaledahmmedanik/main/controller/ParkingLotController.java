@@ -76,12 +76,13 @@ public class ParkingLotController {
 		
 		// book a parking slot   by ID: (update parking slot info)
 		
-		@PutMapping("/parkingSlots/book/{id}")
-		public ResponseEntity<?> bookParkingSlotById(@PathVariable("id") int id, @RequestBody CarInfo carInfo){
+		@PutMapping("/parkingSlots/book")
+		public ResponseEntity<?> bookParkingSlotById(@RequestBody CarInfo carInfo){
 			
 			try {
-				parkingLotService.bookParkingSlotById(id,carInfo);
-				return new ResponseEntity<>("Parking slot "+id+" get booked successfully",HttpStatus.OK);
+				int id= parkingLotService.bookFreeParkingSlot(carInfo);
+				//need change
+				return new ResponseEntity<>("Car "+carInfo.getVin()+" is going to book the slot ",HttpStatus.OK);
 			}catch (ParkingSlotCollectionExceptioin e) {
 				return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
 			}catch (Exception e) {
@@ -94,14 +95,14 @@ public class ParkingLotController {
 		
 		
 		
-		@DeleteMapping("/parkingSlots/delete/{id}")
-		public ResponseEntity<?> deleteParkingSlotById(@PathVariable("id") int id){
-			
+		@DeleteMapping("/parkingSlots/delete")
+		public ResponseEntity<?> decreaseParkingLotSizeBy1(){
+			//@PathVariable("id") int id
 			try {
-				parkingLotService.deleteParkingSlotById(id);
-				return new ResponseEntity<>("Parking slot "+id+" deleted successfully", HttpStatus.OK);
+				int id = parkingLotService.deleteLastParkingSlot();
+				return new ResponseEntity<>("The last Parking slot "+id+" deleted successfully", HttpStatus.OK);
 			}catch (Exception e) {
-				return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 			
 		}

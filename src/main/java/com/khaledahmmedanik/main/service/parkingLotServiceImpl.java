@@ -67,64 +67,71 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		return parkingSlotOptional.get();
 	}
 
-	// booking
+	// book slot , slot will be selected based on free and smaller id
 	@Override
-	public void bookParkingSlotById(int id, CarInfo carInfo) throws ParkingSlotCollectionExceptioin {
+	public int bookFreeParkingSlot(CarInfo carInfo) throws ParkingSlotCollectionExceptioin {
 
-		Optional<ParkingSlot> foundParkingSlot = parkingLotRepo.findById(id);
-
+		Optional<?> foundParkingSlot = parkingLotRepo.getTheSlotId(carInfo.getVin());
 		if (foundParkingSlot.isPresent()) {
-			ParkingSlot toBeUpdate = foundParkingSlot.get();
-
-			if (toBeUpdate.isBooked() == false) {
-
-				// check vin given or not
-				if (carInfo.getVin() == null) {
-					throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.carVinNull());
-				}
-
-				// update car info that booked the slot
-				toBeUpdate.setBookedCarInfo(carInfo);
-
-				// update slot booted status (isBooked=true)
-				toBeUpdate.setBooked(true);
-
-				// find current time and date
-				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
-				LocalDateTime now = LocalDateTime.now();
-
-				String currentTime = dtf.format(now);
-
-				// update the booking time
-				toBeUpdate.setBookedAt(currentTime);
-
-				// update on db
-				parkingLotRepo.save(toBeUpdate);
-
-			} else {
-				throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.ParkingSlotAlreadyBooked(id));
-			}
-
-		} else {
-			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.NotFoundException(id));
+			ParkingSlot tempInfo = (ParkingSlot) foundParkingSlot.get();
+			throw new ParkingSlotCollectionExceptioin(
+					ParkingSlotCollectionExceptioin.carAlreadyInLot(carInfo.getVin(), tempInfo.getId()));
 		}
+
+		int id = getSlotIdReadyToBeBooked();
+
+		Optional<ParkingSlot> foundParkingSlot1 = parkingLotRepo.findById(id);
+		ParkingSlot toBeUpdate = foundParkingSlot1.get();
+
+		// update car info that booked the slot
+		toBeUpdate.setBookedCarInfo(carInfo);
+
+		// update slot booted status (isBooked=true)
+		toBeUpdate.setBooked(true);
+
+		// find current time and date
+		String currentTime = getCurretTimeDate();
+
+		// update the booking time
+		toBeUpdate.setBookedAt(currentTime);
+		
+		// update the leaving time to null
+		toBeUpdate.setBookFreeFrom(null);
+
+		// update on db
+		parkingLotRepo.save(toBeUpdate);
+		
+		return id;
 
 	}
 
 	@Override
-	public void deleteParkingSlotById(int id) throws ParkingSlotCollectionExceptioin {
-		Optional<ParkingSlot> foundParkingSlot = parkingLotRepo.findById(id);
-
-		if (!foundParkingSlot.isPresent()) {
-			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.NotFoundException(id));
+	public int deleteLastParkingSlot() throws ParkingSlotCollectionExceptioin {
+		
+		int id = parkingLotRepo.countTotalParkingSlots();
+		
+		if (id==0) {
+			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.NoSlotToDelete());
 		}
+		
+		Optional<ParkingSlot> parkingSlotOptional = parkingLotRepo.findById(id);
+		
+		if(parkingSlotOptional.get().isBooked()) {
+			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.SlotCanNotBeBooked());
+		}
+		
+		
+		
 		parkingLotRepo.deleteById(id);
+		
+		
+		
+		return id;
 	}
 
 	public int getSlotIdReadyToBeBooked() throws ParkingSlotCollectionExceptioin {
 		List<ParkingSlot> searchParkingSlot = parkingLotRepo.getFreeSlotList(false);
 
-		System.out.println(searchParkingSlot);
 
 		if (searchParkingSlot.size() > 0) {
 			return searchParkingSlot.get(0).getId();
@@ -133,15 +140,13 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		}
 
 	}
-	
+
 	public String getCurretTimeDate() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
 		LocalDateTime now = LocalDateTime.now();
 
 		return dtf.format(now);
 	}
-	
-	
 
 	// car leave from parking lot, 1 parking slot get free
 	@Override
@@ -149,27 +154,24 @@ public class parkingLotServiceImpl implements ParkingLotService {
 
 		Optional<?> foundParkingSlot = parkingLotRepo.getTheSlotId(carInfo.getVin());
 		if (foundParkingSlot.isPresent()) {
-			ParkingSlot toBeUpdated=(ParkingSlot) foundParkingSlot.get();
-			
-			//update leving time
+			ParkingSlot toBeUpdated = (ParkingSlot) foundParkingSlot.get();
+
+			// update leving time
 			toBeUpdated.setBookFreeFrom(getCurretTimeDate());
-			
-			//set Booked as False as car is leaving and slot get free
+
+			// set Booked as False as car is leaving and slot get free
 			toBeUpdated.setBooked(false);
-			
-			//car info -> null , car is not associate anymore with this particular slot
+
+			// car info -> null , car is not associate anymore with this particular slot
 			toBeUpdated.setBookedCarInfo(null);
-			
+
 			parkingLotRepo.save(toBeUpdated);
-			
-			System.out.println(toBeUpdated);
+
 			return toBeUpdated;
-			
+
 		} else {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.carNotFound());
 		}
 	}
-	
-	
 
 }

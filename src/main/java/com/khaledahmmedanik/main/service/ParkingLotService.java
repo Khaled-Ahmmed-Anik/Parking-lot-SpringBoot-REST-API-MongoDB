@@ -19,9 +19,9 @@ public interface ParkingLotService {
 	
 	public ParkingSlot getParkingSlotById(int id) throws ParkingSlotCollectionExceptioin;
 	
-	public void bookParkingSlotById(int id,CarInfo carInfo) throws ParkingSlotCollectionExceptioin;
+	public int bookFreeParkingSlot(CarInfo carInfo) throws ParkingSlotCollectionExceptioin;
 	
-	public void deleteParkingSlotById(int id) throws ParkingSlotCollectionExceptioin;
+	public int deleteLastParkingSlot() throws ParkingSlotCollectionExceptioin;
 
 
 	public ParkingSlot carLeavesSlotInfoUpdate(CarInfo carInfo) throws ParkingSlotCollectionExceptioin;
