@@ -110,25 +110,25 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		
 		int id = parkingLotRepo.countTotalParkingSlots();
 		
+		
+		//if there is no parking slot
 		if (id==0) {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.NoSlotToDelete());
 		}
 		
 		Optional<ParkingSlot> parkingSlotOptional = parkingLotRepo.findById(id);
 		
+		//if Last parking slot still booked 
 		if(parkingSlotOptional.get().isBooked()) {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.SlotCanNotBeBooked());
 		}
 		
-		
-		
 		parkingLotRepo.deleteById(id);
-		
-		
-		
+
 		return id;
 	}
 
+	//find which slot should be booked next
 	public int getSlotIdReadyToBeBooked() throws ParkingSlotCollectionExceptioin {
 		List<ParkingSlot> searchParkingSlot = parkingLotRepo.getFreeSlotList(false);
 
@@ -140,6 +140,8 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		}
 
 	}
+	
+	
 
 	public String getCurretTimeDate() {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
@@ -190,7 +192,6 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		if (totalBooked!=0) {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.RemoveAllBooked());
 		}
-		
 	
 		parkingLotRepo.deleteAll();
 	}

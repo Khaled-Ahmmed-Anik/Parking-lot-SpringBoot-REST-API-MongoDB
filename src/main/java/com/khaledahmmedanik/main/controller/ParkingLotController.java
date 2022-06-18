@@ -28,8 +28,7 @@ public class ParkingLotController {
 		
 		
 		
-		//to get all the parking slots
-		
+		//to get all the parking slots info
 		@GetMapping("/parkingSlots")
 		public ResponseEntity<?> getAllParkingSlots(){
 			List<ParkingSlot> parkingSlots=parkingLotService.getAllParkingSlots();
@@ -39,8 +38,7 @@ public class ParkingLotController {
 		
 		
 		
-		// to add new parking slot or space to the database (extra space add to the parking lot, )
-		
+		// to add new parking slot or space to the database (extra space add to the parking lot )
 		@PostMapping("/parkingSlots/add")
 		public ResponseEntity<?> addNewParkingSlot() throws ParkingSlotCollectionExceptioin{
 			
@@ -58,8 +56,7 @@ public class ParkingLotController {
 		
 		
 		
-		// find single parking slot info by ID:
-		
+		// find single parking slot info by ID
 		@GetMapping("parkingSlots/{id}")
 		public ResponseEntity<?> getParkingSlotById(@PathVariable("id") int id){
 			
@@ -74,14 +71,13 @@ public class ParkingLotController {
 		
 		
 		
-		// book a parking slot   by ID: (update parking slot info)
+		// book a parking slot (the smallest id of parking slot will be selected among the free slots) : (update parking slot info)
 		
 		@PutMapping("/parkingSlots/book")
 		public ResponseEntity<?> bookParkingSlotById(@RequestBody CarInfo carInfo){
 			
 			try {
 				int id= parkingLotService.bookFreeParkingSlot(carInfo);
-				//need change
 				return new ResponseEntity<>("Car "+carInfo.getVin()+" is going to book the slot  " +id,HttpStatus.OK);
 			}catch (ParkingSlotCollectionExceptioin e) {
 				return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
@@ -94,7 +90,7 @@ public class ParkingLotController {
 		
 		
 		
-		
+		//single slot delete (the last parking slot will get deleted, The parking lot capacity decrease by 1 slot)
 		@DeleteMapping("/parkingSlots/delete")
 		public ResponseEntity<?> decreaseParkingLotSizeBy1(){
 			//@PathVariable("id") int id
@@ -108,6 +104,7 @@ public class ParkingLotController {
 		}
 				
 		
+		//car leave parking lot, a parking slot info get updated (booked=false)
 		@PutMapping("/parkingSlots/leave")
 		public ResponseEntity<?> parkingSlotWithCarInfoGetFree(@RequestBody CarInfo carInfo){
 			
@@ -121,6 +118,8 @@ public class ParkingLotController {
 			}
 		}
 		
+		
+		// delete all info form db, in other words parking lot activity closed 
 		@DeleteMapping("/parkingSlots/closeParkingLot")
 		public ResponseEntity<?> deleteAll(){
 			//@PathVariable("id") int id
