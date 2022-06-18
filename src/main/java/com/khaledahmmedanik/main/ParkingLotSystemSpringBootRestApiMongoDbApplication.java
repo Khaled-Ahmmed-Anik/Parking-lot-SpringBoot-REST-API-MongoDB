@@ -14,17 +14,7 @@ public class ParkingLotSystemSpringBootRestApiMongoDbApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ParkingLotSystemSpringBootRestApiMongoDbApplication.class, args);
 		
-		
-		/*
-		 * DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss\nyyyy/MM/dd ");
-		 * LocalDateTime now = LocalDateTime.now();
-		 * 
-		 * String currentTime = dtf.format(now);
-		 * 
-		 * System.out.println(currentTime);
-		 * 
-		 * 
-		 */
+		//pakingLotAnik1234
 	}
 
 }

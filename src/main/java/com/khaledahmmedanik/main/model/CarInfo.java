@@ -1,5 +1,7 @@
 package com.khaledahmmedanik.main.model;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,6 +19,8 @@ public class CarInfo {
 	 * @Id private int id;
 	 */
 	
+	@NotNull(message="Vin can not be null")
+	@Id
 	private String vin;
 	
 	private String carModel;

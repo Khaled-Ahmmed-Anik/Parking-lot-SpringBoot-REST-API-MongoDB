@@ -69,7 +69,7 @@ public class parkingLotServiceImpl implements ParkingLotService {
 
 	// book slot , slot will be selected based on free and smaller id
 	@Override
-	public int bookFreeParkingSlot(CarInfo carInfo) throws ParkingSlotCollectionExceptioin {
+	public int bookFreeParkingSlot(CarInfo carInfo) throws ConstraintViolationException, ParkingSlotCollectionExceptioin {
 
 		Optional<?> foundParkingSlot = parkingLotRepo.getTheSlotId(carInfo.getVin());
 		if (foundParkingSlot.isPresent()) {
@@ -186,8 +186,6 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		}
 		
 		int totalBooked = parkingLotRepo.getNumberOfSltoBooked(true);
-		
-		System.out.println(totalBooked);
 		
 		if (totalBooked!=0) {
 			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.RemoveAllBooked());
