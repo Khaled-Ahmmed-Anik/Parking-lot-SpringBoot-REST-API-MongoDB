@@ -25,6 +25,9 @@ public interface ParkingLotService {
 
 
 	public ParkingSlot carLeavesSlotInfoUpdate(CarInfo carInfo) throws ParkingSlotCollectionExceptioin;
+
+
+	public void deleteAllParkingSlot() throws ParkingSlotCollectionExceptioin ;
 	
 
 }

@@ -27,5 +27,9 @@ public interface ParkingLotRepository extends MongoRepository<ParkingSlot, Integ
 	Optional<?> getTheSlotId(String vin);
 	
 	
+	 @Query(value ="{Booked: ?0}", count=true)
+	 public int getNumberOfSltoBooked(boolean b);
+	
+	
 
 }

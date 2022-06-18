@@ -174,4 +174,25 @@ public class parkingLotServiceImpl implements ParkingLotService {
 		}
 	}
 
+	@Override
+	public void deleteAllParkingSlot() throws ParkingSlotCollectionExceptioin {
+		
+		int id = parkingLotRepo.countTotalParkingSlots();
+		
+		if (id==0) {
+			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.NoSlotToDelete());
+		}
+		
+		int totalBooked = parkingLotRepo.getNumberOfSltoBooked(true);
+		
+		System.out.println(totalBooked);
+		
+		if (totalBooked!=0) {
+			throw new ParkingSlotCollectionExceptioin(ParkingSlotCollectionExceptioin.RemoveAllBooked());
+		}
+		
+	
+		parkingLotRepo.deleteAll();
+	}
+
 }

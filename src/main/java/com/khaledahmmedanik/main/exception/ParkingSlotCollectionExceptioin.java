@@ -59,5 +59,8 @@ public class ParkingSlotCollectionExceptioin extends Exception {
 			return "Last Parking slot has to be free befor closed" ;
 		}
 		
+		public static String RemoveAllBooked() {
+			return "All Parking slot has to be free befor deteling all Slots" ;
+		}
 		
 }
